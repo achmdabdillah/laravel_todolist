@@ -15,7 +15,8 @@
                 required>
                 <option value="" disabled selected>-- Pilih Proyek --</option>
                 @foreach($projects as $project)
-                    <option value="{{ $project->id }}" {{ (old('project_id') == $project->id || request()->get('project_id') == $project->id) ? 'selected' : '' }}>
+                    <option value="{{ $project->id }}" {{ (old('project_id') == $project->id || request()->get('project_id') == $project->id) ? 'selected' : '' }}
+                        data-deadline="{{ $project->deadline }}">
                         {{ $project->name }}
                     </option>
                 @endforeach
@@ -52,7 +53,7 @@
         <div class="form-group">
             <label for="due_date">Tenggat Waktu</label>
             <input type="date" class="form-control @error('due_date') is-invalid @enderror" id="due_date"
-                name="due_date" value="{{ old('due_date') }}" required>
+                name="due_date" value="{{ old('due_date') }}" min="{{ now()->toDateString() }}" required>
 
             @error('due_date')
                 <div class="invalid-feedback">{{ $message }}</div>
@@ -77,4 +78,26 @@
         <button type="submit" class="btn btn-primary">Simpan Tugas</button>
     </form>
 </div>
+
+<!-- JavaScript to set the max date for due_date based on selected project -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const projectSelect = document.getElementById('project_id');
+        const dueDateInput = document.getElementById('due_date');
+
+        // When project is selected, set the max date for due_date
+        projectSelect.addEventListener('change', function () {
+            const selectedOption = projectSelect.options[projectSelect.selectedIndex];
+            const projectDeadline = selectedOption.getAttribute('data-deadline');
+            dueDateInput.setAttribute('max', projectDeadline);
+        });
+
+        // Set the max date if a project is already selected when the page loads
+        if (projectSelect.value) {
+            const selectedOption = projectSelect.options[projectSelect.selectedIndex];
+            const projectDeadline = selectedOption.getAttribute('data-deadline');
+            dueDateInput.setAttribute('max', projectDeadline);
+        }
+    });
+</script>
 @endsection

@@ -11,7 +11,7 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light px-5">
         <!-- <a class="navbar-brand" href="#">Manajemen Proyek</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -20,10 +20,12 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
                 <li class="nav-item active">
-                    <a class="nav-link" href="{{ route('projects.index') }}">Daftar Proyek</a>
+                    <a class="nav-link {{ Route::currentRouteName() == 'projects.index' ? 'active' : '' }}"
+                        href="{{ route('projects.index') }}">Daftar Proyek</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('projects.create') }}">Tambah Proyek</a>
+                    <a class="nav-link {{ Route::currentRouteName() == 'projects.create' ? 'active' : '' }}"
+                        href="{{ route('projects.create') }}">Tambah Proyek</a>
                 </li>
             </ul>
         </div>
@@ -31,6 +33,9 @@
 
     <div class="container mt-4">
         @yield('content')
+    </div>
+
+    <div style="height: 100px">
     </div>
 
     <!-- Link ke Bootstrap JS -->

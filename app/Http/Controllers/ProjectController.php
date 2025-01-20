@@ -68,7 +68,15 @@ class ProjectController extends Controller
 
     public function show(Project $project)
     {
-        return view('projects.show', compact('project'));
+        // Define the order for statuses
+        $statusOrder = ['not_started', 'in_progress', 'completed'];
+
+        // Sort tasks based on the predefined status order
+        $sortedTasks = $project->tasks->sortBy(function ($task) use ($statusOrder) {
+            return array_search($task->status, $statusOrder);
+        });
+
+        return view('projects.show', compact('project', 'sortedTasks'));
     }
 }
 
