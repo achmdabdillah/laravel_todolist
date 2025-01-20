@@ -28,10 +28,18 @@ class ProjectController extends Controller
         // Ambil proyek yang sudah difilter
         $projects = $query->get();
 
-        // Check for projects whose deadline is 2 days from now
-        $projectsDueSoon = Project::whereDate('deadline', Carbon::now()->addDays(2)->toDateString())->get();
+        // // Loop through projects to include completion percentage for each one
+        $projects->each(function ($project) {
+            // Access completion percentage
+            $project->completion_percentage = $project->completion_percentage;
+        });
 
-        // Kembalikan tampilan dengan proyek yang sudah difilter dan proyek yang deadline-nya 2 hari lagi
+        $projectsDueSoon = Project::whereDate('deadline', Carbon::now()->addDays(2)->toDateString())->get();
+        $projectsDueSoon = $projectsDueSoon->filter(function ($project) {
+            return $project->completion_percentage < 100;
+        });
+
+        // return tampilan dengan proyek yang sudah difilter dan proyek yang deadline-nya 2 hari lagi
         return view('projects.index', compact('projects', 'projectsDueSoon'));
     }
 
@@ -61,6 +69,16 @@ class ProjectController extends Controller
             return array_search($task->status, $statusOrder);
         });
 
-        return view('projects.show', compact('project', 'sortedTasks'));
+        // Get tasks that are due in 2 days for this project
+        $tasksDueSoon = $project->tasks->filter(function ($task) {
+            // Ensure the date is parsed as a Carbon instance and check if the task is due within the next 2 days
+            if (($task->status) != 'completed') {
+                $dueDate = Carbon::parse($task->due_date);
+                return $dueDate->isToday() || $dueDate->isTomorrow() || $dueDate->isSameDay(Carbon::now()->addDays(2));
+            }
+        });
+
+
+        return view('projects.show', compact('project', 'sortedTasks', 'tasksDueSoon'));
     }
 }

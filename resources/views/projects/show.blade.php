@@ -59,4 +59,21 @@
         </div>
     @endforeach
 </div>
+
+@if($tasksDueSoon->isNotEmpty())
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            @foreach($tasksDueSoon as $task)
+                Swal.fire({
+                    title: 'Tugas Mendekat!',
+                    text: 'Ada tugas yang mendekati deadline!',
+                    icon: 'warning',
+                    confirmButtonText: 'Ok'
+                });
+            @endforeach
+        });
+    </script>
+@endif
+
+
 @endsection
