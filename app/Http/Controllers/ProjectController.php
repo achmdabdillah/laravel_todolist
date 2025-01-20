@@ -6,22 +6,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Project;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class ProjectController extends Controller
 {
-    // public function index(Request $request)
-    // {
-    //     $query = Project::query();
-
-    //     if ($request->has('search')) {
-    //         $query->where('name', 'like', '%' . $request->search . '%')
-    //             ->orWhereDate('deadline', '=', $request->search);
-    //     }
-
-    //     $projects = $query->with('tasks')->get();
-    //     return view('projects.index', compact('projects'));
-    // }
-
     public function index(Request $request)
     {
         // Ambil data proyek berdasarkan parameter pencarian
@@ -32,11 +20,6 @@ class ProjectController extends Controller
             $query->where('name', 'like', '%' . $request->name . '%');
         }
 
-        // // Filter berdasarkan tanggal mulai (jika ada)
-        // if ($request->filled('start_date')) {
-        //     $query->whereDate('created_at', '>=', $request->start_date);
-        // }
-
         // Filter berdasarkan tanggal selesai (jika ada)
         if ($request->filled('deadline')) {
             $query->whereDate('deadline', '<=', $request->deadline);
@@ -45,10 +28,12 @@ class ProjectController extends Controller
         // Ambil proyek yang sudah difilter
         $projects = $query->get();
 
-        // Kembalikan tampilan dengan proyek yang sudah difilter
-        return view('projects.index', compact('projects'));
-    }
+        // Check for projects whose deadline is 2 days from now
+        $projectsDueSoon = Project::whereDate('deadline', Carbon::now()->addDays(2)->toDateString())->get();
 
+        // Kembalikan tampilan dengan proyek yang sudah difilter dan proyek yang deadline-nya 2 hari lagi
+        return view('projects.index', compact('projects', 'projectsDueSoon'));
+    }
 
     public function create()
     {
@@ -79,4 +64,3 @@ class ProjectController extends Controller
         return view('projects.show', compact('project', 'sortedTasks'));
     }
 }
-

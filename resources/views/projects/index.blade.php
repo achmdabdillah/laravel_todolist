@@ -27,4 +27,22 @@
         </div>
     @endforeach
 </div>
+
+<!-- Show SweetAlert if there are projects due in 2 days -->
+@if($projectsDueSoon->isNotEmpty())
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Loop through each project and show an alert for each one
+            @foreach($projectsDueSoon as $project)
+                Swal.fire({
+                    title: 'Deadline Mendekat!',
+                    text: 'Proyek "{{ $project->name }}" akan jatuh tempo dalam 2 hari.',
+                    icon: 'warning',
+                    confirmButtonText: 'Ok'
+                });
+            @endforeach
+        });
+    </script>
+@endif
+
 @endsection
