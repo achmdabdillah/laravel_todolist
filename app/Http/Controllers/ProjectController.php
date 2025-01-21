@@ -34,7 +34,10 @@ class ProjectController extends Controller
             $project->completion_percentage = $project->completion_percentage;
         });
 
-        $projectsDueSoon = Project::whereDate('deadline', Carbon::now()->addDays(2)->toDateString())->get();
+        // Get projects with deadline in the next 1 or 2 days
+        $projectsDueSoon = Project::whereDate('deadline', Carbon::now()->addDay()->toDateString())
+            ->orWhereDate('deadline', Carbon::now()->addDays(2)->toDateString())
+            ->get();
         $projectsDueSoon = $projectsDueSoon->filter(function ($project) {
             return $project->completion_percentage < 100;
         });
