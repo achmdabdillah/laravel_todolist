@@ -19,7 +19,7 @@
 </form>
 <div class="row justify-content-start mt-2">
     @foreach($projects as $project)
-        <div class="border col-md-4 p-0">
+        <div class="border rounded col-md-4 mx-2 p-3">
             <h3>{{ $project->name }}</h3>
             <p>Deadline: {{ $project->deadline }}</p>
             <p>Completion: {{ $project->completion_percentage }}%</p>

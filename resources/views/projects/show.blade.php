@@ -37,25 +37,29 @@
 
 <div class="row justify-content-start">
     @foreach($sortedTasks as $task)
-        <div class="col-md-4 border mt-4">
-            <h3>{{ $task->title }}</h3>
-            <div>
+        <div class="col-md-3 border rounded mt-4 mx-2 h-auto d-flex flex-column justify-content-between">
+            <div class="">
+                <h3>{{ $task->title }}</h3>
                 <p>
                     {{ $task->description }}
                 </p>
             </div>
-            <p><strong>Due:</strong> {{ ucfirst($task->due_date) }}</p>
-            <p class="border m-0"><strong>Status:</strong></p>
-            <form class="border" action="{{ route('tasks.updateStatus', $task) }}" method="POST">
-                @csrf
-                @method('PATCH')
-                <select name="status">
-                    <option value="not_started" {{ $task->status == 'not_started' ? 'selected' : '' }}>Not Started</option>
-                    <option value="in_progress" {{ $task->status == 'in_progress' ? 'selected' : '' }}>In Progress</option>
-                    <option value="completed" {{ $task->status == 'completed' ? 'selected' : '' }}>Completed</option>
-                </select>
-                <button class="btn btn-primary " type="submit">Update Status</button>
-            </form>
+            <div class="border">
+                <p><strong>Due:</strong> {{ ucfirst($task->due_date) }}</p>
+                <p class="border rounded m-0"><strong>Status:</strong></p>
+                <form class="border rounded" action="{{ route('tasks.updateStatus', $task) }}" method="POST">
+                    @csrf
+                    @method('PATCH')
+                    <select name="status">
+                        <option value="not_started" {{ $task->status == 'not_started' ? 'selected' : '' }}>Not Started
+                        </option>
+                        <option value="in_progress" {{ $task->status == 'in_progress' ? 'selected' : '' }}>In Progress
+                        </option>
+                        <option value="completed" {{ $task->status == 'completed' ? 'selected' : '' }}>Completed</option>
+                    </select>
+                    <button class="btn btn-primary " type="submit">Update Status</button>
+                </form>
+            </div>
         </div>
     @endforeach
 </div>
